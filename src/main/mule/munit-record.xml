@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="caa3c6d8-d544-4b3b-be55-c5c1333afdd0" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="f62744d2-73aa-4134-a753-e4d8a4815520" >
+		<http:request-connection host="ilt.mulesoft-training.com" port="80" />
+	</http:request-config>
+	<flow name="munit-recordFlow" doc:id="bb92030f-ba16-4fd7-aa7d-f7b099d0748a" >
+		<http:listener doc:name="Listener" doc:id="9c39941c-19ed-4aeb-95d1-ca46e19ac00b" config-ref="HTTP_Listener_config" path="/munit"/>
+		<set-variable value="#[attributes.queryParams.destination]" doc:name="Set Variable" doc:id="ece59540-54d8-4592-ac31-e8e568570900" variableName="destination"/>
+		<validation:matches-regex doc:name="Matches regex" doc:id="e6b3edcd-3839-48c4-a4a7-99ba8b670257" value="#[vars.destination]" regex="^(SFO|CLE|LAX)$"/>
+		<http:request method="GET" doc:name="Request" doc:id="e476272f-cdfa-41ed-aeb5-edef89d11036" config-ref="HTTP_Request_configuration" path="/essentials/united/flights/{destination}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"destination" : vars.destination
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+</mule>
