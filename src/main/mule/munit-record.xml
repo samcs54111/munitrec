@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<set-variable value="#[attributes.queryParams.destination]" doc:name="Set Variable" doc:id="ece59540-54d8-4592-ac31-e8e568570900" variableName="destination"/>
 		<validation:matches-regex doc:name="Matches regex" doc:id="e6b3edcd-3839-48c4-a4a7-99ba8b670257" value="#[vars.destination]" regex="^(SFO|CLE|LAX)$"/>
 		<http:request method="GET" doc:name="Request" doc:id="e476272f-cdfa-41ed-aeb5-edef89d11036" config-ref="HTTP_Request_configuration" path="/essentials/united/flights/{destination}">
-			<http:uri-params ><![CDATA[#[output application/java
+			<http:uri-params ><![CDATA[#[output application/json
 ---
 {
 	"destination" : vars.destination
